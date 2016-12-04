@@ -93,6 +93,7 @@ class MainApplication(tk.Frame):
         self.parent = parent
         self.parent.bind('<BackSpace>', self._key_backspace)
         self.parent.bind('<space>', self._key_space)
+        self.parent.wm_title(self.image_paths[self.current_image_id])
 
         self.image_classification = ImageRectangleFrame(self, width, height, self.image_paths[self.current_image_id])
         self.image_classification.pack()
@@ -116,6 +117,7 @@ class MainApplication(tk.Frame):
         # Check if it's the last image
         if self.current_image_id < len(self.image_paths):
             self.image_classification.set_image(self.image_paths[self.current_image_id])
+            self.parent.wm_title(self.image_paths[self.current_image_id])
         else:
             self.quit()
 
