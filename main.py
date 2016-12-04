@@ -3,6 +3,7 @@ from tkinter import Canvas
 import tkinter as tk
 from PIL import ImageTk, Image
 import pickle
+import os
 
 
 class ImageRectangleFrame(tk.Frame):
@@ -125,15 +126,23 @@ def run():
     """
     train_images_path = './data/train/*/*.jpg'
     output_filename = 'fish_coordinates.p'
+    found_fish_coordinates = {}
     image_size = (1280, 720)
     tk_root = tk.Tk()
 
-    app = MainApplication(tk_root, *image_size, list(glob(train_images_path)))
+    if os.path.isfile(output_filename):
+        try:
+            found_fish_coordinates = pickle.load(open(output_filename, 'rb'))
+        except EOFError:
+            pass
+    missing_fish_coordinates = [path for path in glob(train_images_path) if path not in found_fish_coordinates.keys()]
+
+    app = MainApplication(tk_root, *image_size, missing_fish_coordinates)
     app.pack(side='bottom', fill='both', expand=True)
     tk_root.mainloop()
 
     with open(output_filename, 'w+b') as outfile:
-        pickle.dump(app.all_fish_coordinates, outfile)
+        pickle.dump({**found_fish_coordinates, **app.all_fish_coordinates}, outfile)
 
 if __name__ == '__main__':
     run()
