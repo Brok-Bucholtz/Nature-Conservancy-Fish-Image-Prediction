@@ -11,8 +11,7 @@ from PIL import Image
 from tqdm import tqdm
 from os.path import isfile
 from sklearn.utils import shuffle
-from os.path import basename
-
+from helper import save_predictions
 import numpy as np
 
 # Fix error with Keras and TensorFlow
@@ -93,12 +92,7 @@ def predict(img_shape, model):
     features, _ = preprocess(img_shape, image_paths)
     predictions = model.predict(features)
 
-    # Save file
-    header = 'image,ALB,BET,DOL,LAG,NoF,OTHER,SHARK,YFT'
-    with open(prediction_file, 'w') as out:
-        out.write(header + '\n')
-        for image_paths, prediction in zip(image_paths, predictions):
-            out.write(basename(image_paths) + ',' + ','.join([str(x) for x in prediction]) + '\n')
+    save_predictions(prediction_file, image_paths, predictions)
 
 
 def run():
