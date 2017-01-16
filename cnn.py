@@ -92,7 +92,11 @@ def predict(img_shape, model):
     features, _ = preprocess(img_shape, image_paths)
     predictions = model.predict(features)
 
-    save_predictions(prediction_file, image_paths, predictions)
+    save_predictions(
+        prediction_file,
+        image_paths,
+        ['ALB', 'BET', 'DOL', 'LAG', 'NoF', 'OTHER', 'SHARK', 'YFT'],
+        predictions)
 
 
 def run():
