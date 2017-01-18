@@ -10,25 +10,31 @@ from tqdm import tqdm
 import numpy as np
 
 
+def rand_rotate(file_path):
+    angle = randint(1, 360)
+    train_file = io.imread(file_path)
+    rotated_image = rotate(train_file, angle)
+
+    # Fix Warning of float64 to uint8 conversion in skimage.io.imsave
+    rotated_image *= 255
+    rotated_image = rotated_image.astype(np.uint8)
+
+    return rotated_image
+
+
 def run():
     rotation_folder = './data/augmentation/rotation/'
     train_filepaths = list(glob('./data/train/*/*.jpg'))
     labels = [path[13:-14] for path in train_filepaths]
 
-    for file_path, label in tqdm(list(zip(train_filepaths, labels))):
-        angle = randint(1, 360)
-        train_file = io.imread(file_path)
-        rated_image = rotate(train_file, angle)
-
-        # Create directory if it doesn't exist
+    # Create label directories if they don't exist
+    for label in labels:
         if not exists(rotation_folder + label):
             makedirs(rotation_folder + label)
 
-        # Fix Warning of float64 to uint8 conversion in skimage.io.imsave
-        rated_image *= 255
-        rated_image = rated_image.astype(np.uint8)
-
-        io.imsave(rotation_folder + label + '/' + basename(file_path), rated_image)
+    for file_path, label in tqdm(list(zip(train_filepaths, labels))):
+        augmented_image = rand_rotate(file_path)
+        io.imsave(rotation_folder + label + '/' + basename(file_path), augmented_image)
 
 
 if __name__ == '__main__':
