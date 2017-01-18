@@ -12,13 +12,9 @@ import numpy as np
 
 def rand_rotate(image):
     angle = randint(1, 360)
-    rotated_image = rotate(image, angle)
+    return rotate(image, angle, preserve_range=True).astype(np.uint8)
 
-    # Fix Warning of float64 to uint8 conversion in skimage.io.imsave
-    rotated_image *= 255
-    rotated_image = rotated_image.astype(np.uint8)
 
-    return rotated_image
 
 
 def run():
