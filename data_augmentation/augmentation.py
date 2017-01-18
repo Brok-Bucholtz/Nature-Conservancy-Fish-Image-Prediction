@@ -10,10 +10,9 @@ from tqdm import tqdm
 import numpy as np
 
 
-def rand_rotate(file_path):
+def rand_rotate(image):
     angle = randint(1, 360)
-    train_file = io.imread(file_path)
-    rotated_image = rotate(train_file, angle)
+    rotated_image = rotate(image, angle)
 
     # Fix Warning of float64 to uint8 conversion in skimage.io.imsave
     rotated_image *= 255
@@ -33,7 +32,7 @@ def run():
             makedirs(rotation_folder + label)
 
     for file_path, label in tqdm(list(zip(train_filepaths, labels))):
-        augmented_image = rand_rotate(file_path)
+        augmented_image = rand_rotate(io.imread(file_path))
         io.imsave(rotation_folder + label + '/' + basename(file_path), augmented_image)
 
 
